@@ -1,0 +1,187 @@
+ <!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Assignment 4</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../foundation/css/foundation.min.css" />
+</head>    
+<body>
+
+<div class="title-bar" data-responsive-toggle="responsive-menu" data-hide-for="medium">
+  <button class="menu-icon" type="button" data-toggle="responsive-menu"></button>
+  <div class="title-bar-title">Menu</div>
+</div>
+
+<div class="top-bar" id="responsive-menu">
+  <div class="top-bar-left">
+    <ul class="dropdown menu" data-dropdown-menu>
+        <li><a href="../index.html">Home</a></li>
+      <li class="menu-text">Assignment 4</li>
+     <!--  <li class="has-submenu">
+        <a href="#0">Sections</a>
+        <ul class="submenu menu vertical" data-submenu>
+          <li><a href="index.html">One</a></li>
+          <li><a href="page2.html">Two</a></li>
+          <li><a href="page3.html">Three</a></li>
+        </ul>
+      </li> -->
+    </ul>
+  </div>
+</div>
+<!-- PHP Stuff -->
+
+<?php
+session_start();
+if (!isset($_SESSION['userstuff'])) {
+$emptysess = "User data not found. Please return to the <a href='index.html'>initial form</a>.";
+} else {
+    $emptysess = "Your user information has been successfully saved.";
+
+//instead of opening a file, connect to database and get rodents 
+//connect to mysql
+$mysqli = new mysqli("localhost", "tls0424", "PRmWrSNghxLbuZUL", "tls0424");
+
+//create table
+$sql = "CREATE TABLE myRats 
+        (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, rodenta VARCHAR(30),rodentb VARCHAR(30),rodentc VARCHAR(30),rodentd VARCHAR(30))";
+        $res = mysqli_query($mysqli, $sql);
+
+$res = mysqli_query($mysqli, "SELECT * FROM myRats");
+$row = mysqli_fetch_array($res);
+
+}
+
+// define variables and set to empty values
+
+$loneErr = $ltwoErr = $ltreErr = $lfouErr = "";
+$likert1 = $likert2 = $likert3 = $likert4 = "";
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  if (empty($_POST["likert1"])) {
+    $loneErr = "Rating is required.";
+  } else {
+    $likert1 = test_input($_POST["likert1"]);
+  }
+  if (empty($_POST["likert2"])) {
+    $ltwoErr = "Rating is required.";
+  } else {
+    $likert2 = test_input($_POST["likert2"]);
+  }
+  if (empty($_POST["likert3"])) {
+    $ltreErr = "Rating is required.";
+  } else {
+    $likert3 = test_input($_POST["likert3"]);
+  }
+  if (empty($_POST["likert4"])) {
+    $lfouErr = "Rating is required.";
+  } else {
+    $likert4 = test_input($_POST["likert4"]);
+  }
+
+//create table
+$sql = "CREATE TABLE myLikes 
+        (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, likea VARCHAR(30),likeb VARCHAR(30),likec VARCHAR(30),liked VARCHAR(30))";
+        $res = mysqli_query($mysqli, $sql);
+
+//write to table
+$sql = "INSERT INTO myLikes (likea, likeb, likec, liked)
+                VALUES ('$likert1', '$likert2', '$likert3', '$likert4')";
+        $res = mysqli_query($mysqli, $sql);
+
+
+    if ($loneErr ==''&& $ltwoErr ==''&& $ltreErr ==''&& $lfouErr =='') {
+    $_SESSION['ratstuff'] = $_POST;
+    header('Location: page3.html');
+    exit;
+}
+}
+function test_input($data) {
+  $data = trim($data);
+  $data = stripslashes($data);
+  $data = htmlspecialchars($data);
+  return $data;
+}
+?>    
+
+<!-- HTML FORM -->    
+<div class="grid-container">
+<div class="grid-x grid-padding-x">
+<div class="medium-12 cell">
+<div class="callout success" style="margin-top: 20px;">
+  <h5>Alert!</h5>
+  <p><?php echo $emptysess;?></p>
+</div>
+</div>        
+</div>   
+<div class="grid-x grid-padding-x">
+<div class="medium-12 cell">
+<div style="margin: 20px 0 30px 0;">
+  <h4>Please rate the following rodents:</h4>
+</div>
+</div>        
+</div>      
+<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+<div class="grid-x grid-padding-x">
+        
+ <fieldset class="medium-6 cell">
+    <legend><?php echo $row['rodenta'];?><span style="color: red;"> * <?php echo $loneErr; ?></span></legend>
+    <input type="radio" name="likert1" value="Hate"    id="a1" required><label for="a1">Hate</label>
+    <input type="radio" name="likert1" value="Dislike" id="a2"><label for="a2">Dislike</label>
+    <input type="radio" name="likert1" value="Neutral" id="a3"><label for="a3">Neutral</label>
+    <input type="radio" name="likert1" value="Like"    id="a4"><label for="a4">Like</label>
+    <input type="radio" name="likert1" value="Love"    id="a5"><label for="a5">Love</label>
+     <hr>
+      </fieldset>
+ <fieldset class="medium-6 cell">
+    <legend><?php echo $row['rodentb'];?><span style="color: red;"> * <?php echo $ltwoErr; ?></span></legend>
+    <input type="radio" name="likert2" value="Hate"     id="b1" required><label for="b1">Hate</label>
+    <input type="radio" name="likert2" value="Dislike"  id="b2"><label for="b2">Dislike</label>
+    <input type="radio" name="likert2" value="Neutral"  id="b3"><label for="b3">Neutral</label>
+    <input type="radio" name="likert2" value="Like"     id="b4"><label for="b4">Like</label>
+    <input type="radio" name="likert2" value="Love"     id="b5"><label for="b5">Love</label> 
+    <hr>  
+    </fieldset>
+</div>
+
+<div class="grid-x grid-padding-x">
+ <fieldset class="medium-6 cell">
+    <legend><?php echo $row['rodentc'];?><span style="color: red;"> * <?php echo $ltreErr; ?></span></legend>
+    <input type="radio" name="likert3" value="Hate"     id="c1" required><label for="c1">Hate</label>
+    <input type="radio" name="likert3" value="Dislike"  id="c2"><label for="c2">Dislike</label>
+    <input type="radio" name="likert3" value="Neutral"  id="c3"><label for="c3">Neutral</label>
+    <input type="radio" name="likert3" value="Like"     id="c4"><label for="c4">Like</label>
+    <input type="radio" name="likert3" value="Love"     id="c5"><label for="c5">Love</label> 
+      </fieldset>
+ <fieldset class="medium-6 cell">
+    <legend><?php echo $row['rodentd'];?><span style="color: red;"> * <?php echo $lfouErr; ?></span></legend>
+    <input type="radio" name="likert4" value="Hate"     id="d1" required><label for="d1">Hate</label>
+    <input type="radio" name="likert4" value="Dislike"  id="d2"><label for="d2">Dislike</label>
+    <input type="radio" name="likert4" value="Neutral"  id="d3"><label for="d3">Neutral</label>
+    <input type="radio" name="likert4" value="Like"     id="d4"><label for="d4">Like</label>
+    <input type="radio" name="likert4" value="Love"     id="d5"><label for="d5">Love</label> 
+      </fieldset>
+</div>
+
+<div class="grid-x grid-padding-x">
+     <div class="medium-6 cell">
+
+    </div>
+ <div class="medium-6 cell">
+<span style="color: red;"></span>
+    <button style="float: right;" type="submit" class="button" name="submit" value="submit">Submit</button>
+    </div>
+    </div>
+</form>        
+</div>    
+  
+    <script src="../foundation/js/vendor/jquery.js"></script>
+    <script src="../foundation/js/vendor/what-input.js"></script>
+    <script src="../foundation/js/vendor/foundation.min.js"></script>
+    <script>
+      $(document).foundation();
+    </script>    
+</body>
+</html>

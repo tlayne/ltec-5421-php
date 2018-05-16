@@ -1,0 +1,159 @@
+ <!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Assignment 4</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../foundation/css/foundation.min.css" />
+</head>    
+<body>
+
+<div class="title-bar" data-responsive-toggle="responsive-menu" data-hide-for="medium">
+  <button class="menu-icon" type="button" data-toggle="responsive-menu"></button>
+  <div class="title-bar-title">Menu</div>
+</div>
+
+<div class="top-bar" id="responsive-menu">
+  <div class="top-bar-left">
+    <ul class="dropdown menu" data-dropdown-menu>
+        <li><a href="../index.html">Home</a></li>
+      <li class="menu-text">Assignment 4</li>
+     <!--  <li class="has-submenu">
+        <a href="#0">Sections</a>
+        <ul class="submenu menu vertical" data-submenu>
+          <li><a href="index.html">One</a></li>
+          <li><a href="page2.html">Two</a></li>
+          <li><a href="page3.html">Three</a></li>
+        </ul>
+      </li> -->
+    </ul>
+  </div>
+</div>
+<!-- PHP Stuff -->
+<?php
+
+session_start();
+
+// define variables and set to empty values
+$nameErr = $emailErr = $surnameErr = $ageErr = "";
+$name = $email = $surname = $age = "";
+$mismatch = "";
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  if (empty($_POST["name"])) {
+    $nameErr = "Name is required";
+  } else {
+    $name = test_input($_POST["name"]);
+  }
+
+  if (empty($_POST["email"])) {
+    $emailErr = "Email is required";
+  } else {
+    $email = test_input($_POST["email"]);
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+      $emailErr = "Invalid email format";
+    }
+}
+  if (empty($_POST["surname"])) {
+    $surnameErr = "Last Name is required";
+  } else {
+    $surname = test_input($_POST["surname"]);
+  }
+
+  if (empty($_POST["age"])) {
+    $ageErr = "Age is required";
+  } else {
+    $age = test_input($_POST["age"]);
+    if (!preg_match("/^[0-9]/", $age)) {
+      $ageErr = "Only Numbers Allowed";
+    }
+  }
+
+
+if ($nameErr ==''&& $emailErr ==''&& $surnameErr ==''&& $ageErr =='' ) {
+
+//connect to mysql
+$mysqli = new mysqli("localhost", "tls0424", "PRmWrSNghxLbuZUL", "tls0424");
+
+//create table
+$sql = "CREATE TABLE myUser 
+        (id INT NOT NULL PRIMARY KEY AUTO_INCREMENT, name VARCHAR(30),surname VARCHAR(30),email VARCHAR(50),age VARCHAR(3))";
+        $res = mysqli_query($mysqli, $sql);
+
+//write to table
+$sql = "INSERT INTO myUser (name, surname, email, age)
+                VALUES ('$name', '$surname', '$email', '$age')";
+
+            if (mysqli_query($mysqli, $sql)) {
+                $_SESSION['userstuff'] = $_POST;
+                header('Location: page2.html');
+                exit;
+            } else {
+            echo "Error: " . $sql . "<br>" . mysqli_error($mysqli);
+            }
+}
+}
+
+function test_input($data) {
+  $data = trim($data);
+  $data = stripslashes($data);
+  $data = htmlspecialchars($data);
+  return $data;
+}
+?> 
+ 
+
+<!-- HTML FORM -->    
+<div class="grid-container">
+<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+<div class="grid-x grid-padding-x">
+        
+ <div class="medium-6 cell">
+        <label>First Name <span style="color: red;">* <?php echo $nameErr;?></span>
+          <input type="text" id="name" name="name" placeholder="John" value="<?php echo $name;?>">
+        </label>
+      </div>
+      <div class="medium-6 cell">
+        <label>Last Name <span style="color: red;">* <?php echo $surnameErr;?></span>
+          <input type="text" id="surname" name="surname" placeholder="Smith" value="<?php echo $surname;?>">
+        </label>
+      </div> 
+  
+</div>
+
+<div class="grid-x grid-padding-x">
+        
+      <div class="medium-6 cell">
+        <label>Age <span style="color: red;">* <?php echo $ageErr;?></span>
+          <input type="text" id="age" name="age" placeholder="23" value="<?php echo $age;?>">
+        </label>
+      </div> 
+      <div class="medium-6 cell">
+        <label>E-Mail Address <span style="color: red;">* <?php echo $emailErr;?></span>
+          <input type="text" id="email" name="email" placeholder="john@email.com" value="<?php echo $email;?>">
+        </label>
+      </div> 
+</div>
+
+<div class="grid-x grid-padding-x">
+     <div class="medium-6 cell">
+    </div>
+ <div class="medium-6 cell">
+<span style="color: red;"><?php echo $mismatch;?></span>
+    <button style="float: right;" type="submit" class="button" name="submit" value="submit">Submit</button>
+    </div>
+    </div>
+</form>        
+</div>    
+  
+    <script src="../foundation/js/vendor/jquery.js"></script>
+    <script src="../foundation/js/vendor/what-input.js"></script>
+    <script src="../foundation/js/vendor/foundation.min.js"></script>
+    <script>
+      $(document).foundation();
+    </script>    
+</body>
+</html>

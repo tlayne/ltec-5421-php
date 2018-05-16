@@ -1,0 +1,138 @@
+ <!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Assignment 1</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../foundation/css/foundation.min.css" />
+</head>    
+<body>
+
+<div class="title-bar" data-responsive-toggle="responsive-menu" data-hide-for="medium">
+  <button class="menu-icon" type="button" data-toggle="responsive-menu"></button>
+  <div class="title-bar-title">Menu</div>
+</div>
+
+<div class="top-bar" id="responsive-menu">
+  <div class="top-bar-left">
+    <ul class="dropdown menu" data-dropdown-menu>
+        <li><a href="../index.html">Home</a></li>
+      <li class="menu-text">Assignment 1:</li>
+       <li class="has-submenu">
+        <a href="#0">Sections</a>
+        <ul class="submenu menu vertical" data-submenu>
+          <li><a href="index.html">One</a></li>
+          <li><a href="page2.html">Two</a></li>
+          <li><a href="page3.html">Three</a></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+<!-- PHP Stuff -->
+
+<div class="grid-container text-center">
+<div class="grid-x grid-margin-x">
+    <div class="cell"> <!-- time and day -->
+        <h2>It's Currently</h2>
+        <p>
+            <?php
+date_default_timezone_set("America/Chicago");
+echo date("h:i:sa") . " on " . date("m/d/Y") . " in Beaumont, TX.";
+?>
+        </p>
+        <hr>
+    </div>
+</div>
+<div class="grid-x grid-margin-x">
+<div class="cell"> <!-- image for time -->   
+    <?php
+    $t=date('H');
+   
+
+    if (($t > 06) && ($t < 12))
+    {
+      echo "<img class=\"thumbnail\" src=\"morn.jpg\" />";
+    }
+    else if (($t > 12) && ($t < 18))
+    {
+      echo "<img class=\"thumbnail\" src=\"noon.jpg\" />";  
+    }
+    else if (($t > 18) && ($t <= 23))
+    {
+      echo "<img class=\"thumbnail\" src=\"night.jpg\" />";  
+    }       
+    else {
+        echo "<img class=\"thumbnail\" src=\"late.jpg\" />";
+    }
+?>
+    </div>
+    </div>   
+    <div class="grid-x grid-margin-x">
+<div class="cell"> <!-- semester display -->
+    <h3>
+        <?php
+    $semester = date('Y-m-d');
+    $semester=date('Y-m-d', strtotime($semester));
+   
+    $springB = date('Y-m-d', strtotime("01/15/2018"));
+    $springE = date('Y-m-d', strtotime("05/11/2018"));
+    $summerB = date('Y-m-d', strtotime("05/14/2018"));
+    $summerE = date('Y-m-d', strtotime("08/09/2018"));
+    $fallB = date('Y-m-d', strtotime("08/28/2018"));
+    $fallE = date('Y-m-d', strtotime("12/15/2018"));
+
+    if (($semester > $springB) && ($semester < $springE))
+    {
+      echo "I hope you're enjoying the Spring semester.";
+    }
+    else if (($semester > $summerB) && ($semester < $summerE))
+    {
+      echo "I hope you're enjoying the Summer semester.";  
+    }
+    else if (($semester > $fallB) && ($semester < $fallE))
+    {
+      echo "I hope you're enjoying the Fall semester.";  
+    }
+    else {
+        echo "School's out!";
+    }
+?>
+    </h3>
+    <hr>
+    </div>
+    </div>  
+<div class="grid-x grid-margin-x">
+<div class="cell"> <!-- Christmas notification -->
+    <h4>
+    <?php
+$d1=strtotime("December 25");
+$d2=ceil(($d1-time())/60/60/24);
+$d3=date('m-d');
+$christmas='12-25';
+
+if ($d3 == $christmas) {
+echo "Merry Christmas!";
+} else {
+echo "There are only  " . $d2 ." days left until Christmas.";
+}
+?>
+    </h4>
+    </div>
+    </div>
+</div>
+  
+    <script src="../foundation/js/vendor/jquery.js"></script>
+    <script src="../foundation/js/vendor/what-input.js"></script>
+    <script src="../foundation/js/vendor/foundation.min.js"></script>
+    <script>
+      $(document).foundation();
+    </script>    
+</body>
+</html>
+
+<!--
+If the time is between 6am and 12noon display a graphic that shows morning time, if the time is between 12noon and 6pm, display a graphic that shows afternoon time, if the time is between 6pm and 12midnight display a graphics that shows evening, if the time is between 12midight and 6am display a graphic that shows dead of night.
+-->

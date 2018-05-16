@@ -1,0 +1,80 @@
+ <!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Assignment 2</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../foundation/css/foundation.min.css" />
+</head>    
+<body>
+
+<div class="title-bar" data-responsive-toggle="responsive-menu" data-hide-for="medium">
+  <button class="menu-icon" type="button" data-toggle="responsive-menu"></button>
+  <div class="title-bar-title">Menu</div>
+</div>
+
+<div class="top-bar" id="responsive-menu">
+  <div class="top-bar-left">
+    <ul class="dropdown menu" data-dropdown-menu>
+        <li><a href="../index.html">Home</a></li>
+      <li class="menu-text">Assignment 2</li>
+     <!--  <li class="has-submenu">
+        <a href="#0">Sections</a>
+        <ul class="submenu menu vertical" data-submenu>
+          <li><a href="index.html">One</a></li>
+          <li><a href="page2.html">Two</a></li>
+          <li><a href="page3.html">Three</a></li>
+        </ul>
+      </li> -->
+    </ul>
+  </div>
+</div>
+<!-- PHP Stuff -->
+
+<?php
+
+?>    
+
+<!-- HTML FORM -->    
+<div class="grid-container">
+<div class="grid-x grid-padding-x">
+<div class="medium-12 cell">
+<div class="callout success" style="margin-top: 20px;">
+  <h5>Success!</h5>
+  <p>Your contact information has been successfully saved.</p>
+</div>
+</div>        
+</div>    
+<form action="do_upload.php" enctype="multipart/form-data" method="POST" >
+<div class="grid-x grid-padding-x">
+        
+ <div class="medium-12 cell">
+        <input type="hidden" name="MAX_FILE_SIZE" value="5048576" />
+     <p>If you would like to upload a file, please use the "Choose File" option below. If you do not have a file, please select the "Skip" button.</p>
+        <label>File to Upload<span style="color: red;"></span>
+          <input type="file" id="fileupload" name="fileupload" />
+        </label>
+      </div>
+</div>
+<div class="grid-x grid-padding-x">
+     <div class="medium-6 cell">
+    <button style="float: left;" type="submit" class="button" name="submit" value="send">Upload File</button>     
+    </div>
+ <div class="medium-6 cell">
+
+    <a href="page3.html"><div style="float: right;" class="button">Skip</div></a>
+    </div>
+    </div>
+</form>        
+</div>    
+  
+    <script src="../foundation/js/vendor/jquery.js"></script>
+    <script src="../foundation/js/vendor/what-input.js"></script>
+    <script src="../foundation/js/vendor/foundation.min.js"></script>
+    <script>
+      $(document).foundation();
+    </script>    
+</body>
+</html>

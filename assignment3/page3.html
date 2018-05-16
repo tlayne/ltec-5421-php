@@ -1,0 +1,82 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Assignment 3</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../foundation/css/foundation.min.css" />
+</head>    
+<body>
+
+<div class="title-bar" data-responsive-toggle="responsive-menu" data-hide-for="medium">
+  <button class="menu-icon" type="button" data-toggle="responsive-menu"></button>
+  <div class="title-bar-title">Menu</div>
+</div>
+
+<div class="top-bar" id="responsive-menu">
+  <div class="top-bar-left">
+    <ul class="dropdown menu" data-dropdown-menu>
+        <li><a href="../index.html">Home</a></li>
+      <li class="menu-text">Assignment 2</li>
+     <!--  <li class="has-submenu">
+        <a href="#0">Sections</a>
+        <ul class="submenu menu vertical" data-submenu>
+          <li><a href="index.html">One</a></li>
+          <li><a href="page2.html">Two</a></li>
+          <li><a href="page3.html">Three</a></li>
+        </ul>
+      </li> -->
+    </ul>
+  </div>
+</div>
+<!-- PHP Stuff -->
+
+<?php
+
+session_start();
+
+if (!isset($_SESSION['userstuff'])) {
+$emptysess = "User data not found. Please return to the <a href='index.html'>initial form</a>.";
+} else {
+    $emptysess = "Your user information has been successfully saved to the user.txt file.";
+    
+    $filename = 'user.txt';
+    file_put_contents($filename, "\n".$_SESSION['userstuff']['name'].",".$_SESSION['userstuff']['surname'].",".$_SESSION['userstuff']['age'].",".$_SESSION['userstuff']['email'].",".$_SESSION['ratstuff']['likert1'].",".$_SESSION['ratstuff']['likert2'].",".$_SESSION['ratstuff']['likert3'].",".$_SESSION['ratstuff']['likert4'].",",FILE_APPEND | LOCK_EX);
+
+session_destroy();
+}
+
+
+?>        
+
+<!-- HTML FORM -->    
+<div class="grid-container">
+<div class="grid-x grid-padding-x">
+<div class="medium-12 cell">
+<div class="callout success" style="margin-top: 20px;">
+  <h5>Alert!</h5>
+  <p><?php echo $emptysess;?></p>
+    <h4>You supplied the following data:</h4>
+    <p><?php echo $_SESSION['userstuff']['name']; ?></p>
+    <p><?php echo $_SESSION['userstuff']['surname']; ?></p>
+    <p><?php echo $_SESSION['userstuff']['age']; ?></p>
+    <p><?php echo $_SESSION['userstuff']['email']; ?></p>
+    <p><?php echo $_SESSION['ratstuff']['likert1']; ?></p>
+    <p><?php echo $_SESSION['ratstuff']['likert2']; ?></p>
+    <p><?php echo $_SESSION['ratstuff']['likert3']; ?></p>
+    <p><?php echo $_SESSION['ratstuff']['likert4']; ?></p>
+</div>
+</div>        
+</div>           
+</div>    
+  
+    <script src="../foundation/js/vendor/jquery.js"></script>
+    <script src="../foundation/js/vendor/what-input.js"></script>
+    <script src="../foundation/js/vendor/foundation.min.js"></script>
+    <script>
+      $(document).foundation();
+    </script>    
+</body>
+</html>

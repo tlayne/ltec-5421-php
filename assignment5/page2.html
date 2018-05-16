@@ -1,0 +1,240 @@
+ <!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Assignment 5</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../foundation/css/foundation.min.css" />
+</head>    
+<body>
+
+<div class="title-bar" data-responsive-toggle="responsive-menu" data-hide-for="medium">
+  <button class="menu-icon" type="button" data-toggle="responsive-menu"></button>
+  <div class="title-bar-title">Menu</div>
+</div>
+
+<div class="top-bar" id="responsive-menu">
+  <div class="top-bar-left">
+    <ul class="dropdown menu" data-dropdown-menu>
+        <li><a href="../index.html">Home</a></li>
+      <li class="menu-text">Assignment 5 - Wizard Weather</li>
+     <!--  <li class="has-submenu">
+        <a href="#0">Sections</a>
+        <ul class="submenu menu vertical" data-submenu>
+          <li><a href="index.html">One</a></li>
+          <li><a href="page2.html">Two</a></li>
+          <li><a href="page3.html">Three</a></li>
+        </ul>
+      </li> -->
+    </ul>
+  </div>
+</div>
+<!-- PHP Stuff -->
+
+<?php
+
+session_start();
+if (!isset($_SESSION['userstuff'])) {
+$emptysess = "User data not found. Please return to the <a href='index.html'>initial form</a>.";
+} else {
+    $emptysess = "Your location information has been successfully retrieved.";
+}
+
+$ragu = $_SESSION['userstuff']['zippo'];
+
+// define variables and set to empty values
+$nameErr = $emailErr = $surnameErr = $ageErr = "";
+$name = $email = $surname = $zippo = "";
+$mismatch = "";
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+
+  if (empty($_POST["zippo"])) {
+    $zippoErr = "5-Digit Zip is required";
+  } else {
+    $zippo = test_input($_POST["zippo"]);
+    if (!preg_match("#[0-9]{5}#", $zippo)) {
+      $zippoErr = "Only 5-Digit Numbers Allowed";
+    }
+  }
+
+
+if ($nameErr ==''&& $emailErr ==''&& $surnameErr ==''&& $zippoErr =='' ) {
+
+            $_SESSION['userstuff'] = $_POST;
+                header('Location: page2.html');
+                exit;
+            
+}
+}
+
+function test_input($data) {
+  $data = trim($data);
+  $data = stripslashes($data);
+  $data = htmlspecialchars($data);
+  return $data;
+}
+
+/* User Request */
+
+
+    $request = 'http://api.openweathermap.org/data/2.5/weather?zip=' . $ragu . ',us&units=imperial&appid=8af2018f73f62acb9137d92f895c23c0';
+    $response = file_get_contents($request);
+    $clima = json_decode($response);
+    $temp_max=$clima->main->temp_max;
+    $temp_min=$clima->main->temp_min;
+    $icon=$clima->weather[0]->icon.".png";
+    
+    $today = date("F j, Y");
+    $cityname = $clima->name;
+
+/* Static Requests */
+    $request1 = 'http://api.openweathermap.org/data/2.5/weather?zip=78701,us&units=imperial&appid=8af2018f73f62acb9137d92f895c23c0';
+    $response1 = file_get_contents($request1);
+    $clima1 = json_decode($response1);
+    $temp_max1=$clima1->main->temp_max;
+    $temp_min1=$clima1->main->temp_min;
+    $icon1=$clima1->weather[0]->icon.".png";
+    
+    $today = date("F j, Y");
+    $cityname1 = $clima1->name;
+
+    $request2 = 'http://api.openweathermap.org/data/2.5/weather?zip=60601,us&units=imperial&appid=8af2018f73f62acb9137d92f895c23c0';
+    $response2 = file_get_contents($request2);
+    $clima2 = json_decode($response2);
+    $temp_max2=$clima2->main->temp_max;
+    $temp_min2=$clima2->main->temp_min;
+    $icon2=$clima2->weather[0]->icon.".png";
+    
+    $request3 = 'http://api.openweathermap.org/data/2.5/weather?zip=80201,us&units=imperial&appid=8af2018f73f62acb9137d92f895c23c0';
+    $response3 = file_get_contents($request3);
+    $clima3 = json_decode($response3);
+    $temp_max3=$clima3->main->temp_max;
+    $temp_min3=$clima3->main->temp_min;
+    $icon3=$clima3->weather[0]->icon.".png";
+      
+
+    $request4 = 'http://api.openweathermap.org/data/2.5/weather?zip=10001,us&units=imperial&appid=8af2018f73f62acb9137d92f895c23c0';
+    $response4 = file_get_contents($request4);
+    $clima4 = json_decode($response4);
+    $temp_max4=$clima4->main->temp_max;
+    $temp_min4=$clima4->main->temp_min;
+    $icon4=$clima4->weather[0]->icon.".png";
+    
+ /* Card Art and Quotes */
+$request = file_get_contents('https://api.scryfall.com/cards/random?version=art_crop');
+$cards = json_decode($request);
+$cardArt = $cards->image_uris->art_crop;
+$cardFlavor = $cards->flavor_text;
+
+?>    
+
+<!-- HTML FORM -->    
+<div class="grid-container">
+<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+<div class="grid-x grid-padding-x">
+             <div class="medium-3 cell">
+<!-- HOLDER -->
+    </div>
+ <div style="margin-top: 8px;" class="medium-5 cell">
+        <label>5-Digit Zip <span style="color: red;">* <?php echo $zippoErr;?></span>
+          <input type="text" id="zippo" name="zippo" placeholder="77701" value="<?php echo $zippo;?>">
+        </label>
+      </div>
+      <div class="medium-1 cell">
+          <span style="color: red;"><?php echo $mismatch;?></span>
+    <button style="margin-top: 32px;" type="submit" class="button" name="submit" value="submit">Submit</button>
+
+      </div> 
+       <div class="medium-3 cell">
+<!-- HOLDER -->
+    </div>
+</div>
+
+<div class="grid-x grid-padding-x">
+         <div class="medium-3 cell">
+<!-- HOLDER -->
+    </div>
+      <div class="medium-6 cell">
+        <ul class="tabs" data-active-collapse="true" data-tabs id="collapsing-tabs">
+        <li class="tabs-title is-active"><a href="#panel1c" aria-selected="true">Austin</a></li>
+        <li class="tabs-title"><a href="#panel2c">Chicago</a></li>
+        <li class="tabs-title"><a href="#panel3c">Denver</a></li>
+        <li class="tabs-title"><a href="#panel4c">New York</a></li>
+        </ul>
+
+          <div class="tabs-content" data-tabs-content="collapsing-tabs">
+            <div class="tabs-panel is-active" id="panel1c">
+            <p>
+            <?php echo $today . "<br>";
+                     echo "Temp Max: " . $temp_max1 ."&deg;F<br>";
+                     echo "Temp Min: " . $temp_min1 ."&deg;F<br>";
+                     echo "<img src='http://openweathermap.org/img/w/" . $icon1 ."'/ >";?>
+                </p>
+            </div>
+        <div class="tabs-panel" id="panel2c">
+           <p> <?php echo $today . "<br>";
+                     echo "Temp Max: " . $temp_max2 ."&deg;F<br>";
+                     echo "Temp Min: " . $temp_min2 ."&deg;F<br>";
+                     echo "<img src='http://openweathermap.org/img/w/" . $icon2 ."'/ >";?>
+                </p>
+        </div>
+        <div class="tabs-panel" id="panel3c">
+                   <p> <?php echo $today . "<br>";
+                     echo "Temp Max: " . $temp_max3 ."&deg;F<br>";
+                     echo "Temp Min: " . $temp_min3 ."&deg;F<br>";
+                     echo "<img src='http://openweathermap.org/img/w/" . $icon3 ."'/ >";?>
+                </p>
+        </div>
+        <div class="tabs-panel" id="panel4c">
+                    <p> <?php echo $today . "<br>";
+                     echo "Temp Max: " . $temp_max4 ."&deg;F<br>";
+                     echo "Temp Min: " . $temp_min4 ."&deg;F<br>";
+                     echo "<img src='http://openweathermap.org/img/w/" . $icon4 ."'/ >";?>
+                </p>
+        </div>
+          </div>
+      </div> 
+     <div class="medium-3 cell">
+<!-- HOLDER -->
+    </div>
+</div>
+
+<div class="grid-x grid-padding-x">
+     <div class="medium-3 cell">
+<!-- HOLDER -->
+    </div>
+     <div class="medium-6 cell">
+         <div class="card" style="margin-top: 10px;">
+            <div class="card-divider">
+                <h4><?php echo $cityname . " - " .$today; ?></h4>
+            </div>
+            <img src="<?php echo $cardArt;?>">
+            <div class="card-section">
+            <h4 style="font-style: italic;"><?php echo $cardFlavor;?></h4>
+                <hr >
+            <p>      
+                <?php echo "High: " . $temp_max ."&deg;F<br>";
+                     echo "Low: " . $temp_min ."&deg;F<br>";
+                     echo "Sky: " . "<img src='http://openweathermap.org/img/w/" . $icon ."'/ >";?></p>
+                
+            </div>
+        </div>
+    </div>
+ <div class="medium-3 cell">
+<!-- HOLDER -->
+    </div>
+    </div>
+</form>        
+</div>    
+  
+    <script src="../foundation/js/vendor/jquery.js"></script>
+    <script src="../foundation/js/vendor/what-input.js"></script>
+    <script src="../foundation/js/vendor/foundation.min.js"></script>
+    <script>
+      $(document).foundation();
+    </script>    
+</body>
+</html>
